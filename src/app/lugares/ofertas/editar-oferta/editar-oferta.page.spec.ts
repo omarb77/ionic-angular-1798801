@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { RecetasPage } from './recetas.page';
+import { EditarOfertaPage } from './editar-oferta.page';
 
-describe('RecetasPage', () => {
-  let component: RecetasPage;
-  let fixture: ComponentFixture<RecetasPage>;
+describe('EditarOfertaPage', () => {
+  let component: EditarOfertaPage;
+  let fixture: ComponentFixture<EditarOfertaPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RecetasPage ],
+      declarations: [ EditarOfertaPage ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RecetasPage);
+    fixture = TestBed.createComponent(EditarOfertaPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

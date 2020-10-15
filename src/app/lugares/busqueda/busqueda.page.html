@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Discover</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-sm="8" offset-sm="2" text-center>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>{{lugaresCargados[0].titulo}}</ion-card-title>
+            <ion-card-subtitle>{{lugaresCargados[0].precio | currency}}  / por noche</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <p>{{lugaresCargados[0].descripcion}}</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="12" size="8" offset-sm="2" text-center>
+        <ion-list>
+          <ion-item *ngFor="let lugar of lugaresCargados.slice(1)">
+            <ion-thumbnail slot="start">
+              <ion-img [src]="lugar.imageUrl"></ion-img>
+            </ion-thumbnail>
+            <ion-label>
+              <h2>{{lugar.titulo}}</h2>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

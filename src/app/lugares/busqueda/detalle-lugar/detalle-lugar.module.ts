@@ -1,3 +1,4 @@
+import { NuevaReservacionComponent } from './../../../reservaciones/nueva-reservacion/nueva-reservacion.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,6 +16,7 @@ import { DetalleLugarPage } from './detalle-lugar.page';
     IonicModule,
     DetalleLugarPageRoutingModule
   ],
-  declarations: [DetalleLugarPage]
+  declarations: [DetalleLugarPage, NuevaReservacionComponent],
+  entryComponents: [NuevaReservacionComponent]
 })
 export class DetalleLugarPageModule {}

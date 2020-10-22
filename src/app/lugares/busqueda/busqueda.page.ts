@@ -2,6 +2,7 @@ import { LugaresService } from './../lugares.service';
 import { Lugar } from './../lugar.model';
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
+import { SegmentChangeEventDetail} from '@ionic/core';
 
 @Component({
   selector: 'app-busqueda',
@@ -21,4 +22,9 @@ export class BusquedaPage implements OnInit {
   openSideMenu(){
     this.menuCtrl.open();
   }
+
+  onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
+    console.log(event.detail);
+  }
+  
 }

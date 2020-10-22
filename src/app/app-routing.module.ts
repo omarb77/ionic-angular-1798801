@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes, CanLoad } from '@angular/router';
+import { LoginGuard } from './login/login.guard';
 
 const routes: Routes = [
   
@@ -15,15 +16,15 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule) 
   },
   {
     path: 'lugares',
-    loadChildren: () => import('./lugares/lugares.module').then( m => m.LugaresPageModule)
+    loadChildren: () => import('./lugares/lugares.module').then( m => m.LugaresPageModule), canLoad: [LoginGuard]
   },
   {
     path: 'reservaciones',
-    loadChildren: () => import('./reservaciones/reservaciones.module').then( m => m.ReservacionesPageModule)
+    loadChildren: () => import('./reservaciones/reservaciones.module').then( m => m.ReservacionesPageModule), canLoad: [LoginGuard]
   },
 ];
 

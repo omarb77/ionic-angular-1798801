@@ -15,7 +15,8 @@ const routes: Routes = [
 {
   path:'reservaciones',
   loadChildren:()=>import('./app/reservaciones/reservaciones.module').then(m=> m.ReservacionesPageModule)
-},
+}
+]
 
 @NgModule({
   imports: [

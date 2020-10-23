@@ -1,4 +1,4 @@
-import { NuevaReservacionComponent } from './../../../reservaciones/nueva-reservacion/nueva-reservacion.component';
+import { NuevaReservacionComponent } from 'src/app/lugares/ofertas/nueva-reservacion/nueva-reservacion.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

@@ -4,6 +4,8 @@ export class Lugar {
         public titulo: string,
         public descripcion: string,
         public imageUrl: string,
-        public precio: number
+        public precio: number, 
+        public disponibleDesde: Date,
+        public disponibleHasta: Date
     ){}
 }

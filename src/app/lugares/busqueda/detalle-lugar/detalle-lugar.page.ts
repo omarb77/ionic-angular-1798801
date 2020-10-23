@@ -1,6 +1,6 @@
 import { LugaresService } from './../../lugares.service';
 import { Lugar } from './../../lugar.model';
-import { NuevaReservacionComponent } from './../../../reservaciones/nueva-reservacion/nueva-reservacion.component';
+import { NuevaReservacionComponent } from 'src/app/lugares/ofertas/nueva-reservacion/nueva-reservacion.component';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ActionSheetController, ModalController, NavController } from '@ionic/angular';
@@ -56,7 +56,7 @@ export class DetalleLugarPage implements OnInit {
       actionSheetEl.present();
     });
     
-      this.modalCtrl.create({component: NuevaReservacionComponent, componentProps: {lugar: this.lugarActual}})
+      this.modalCtrl.create({component: NuevaReservacionComponent, componentProps: {lugar: this.lugarActual, mode: mode}})
       .then(modalEl => {
         modalEl.present();
         return modalEl.onDidDismiss();
@@ -70,5 +70,3 @@ export class DetalleLugarPage implements OnInit {
     console.log(mode);
   }
 }
-  
-

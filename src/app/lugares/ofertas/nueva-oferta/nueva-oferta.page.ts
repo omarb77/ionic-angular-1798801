@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { LugaresService } from './../../lugares.service';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -9,7 +11,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class NuevaOfertaPage implements OnInit {
 
   form: FormGroup;
-  constructor() { }
+  constructor( private LugaresService: LugaresService, private router: Router) { }
 
   ngOnInit() {
 
@@ -33,7 +35,12 @@ export class NuevaOfertaPage implements OnInit {
   }
 
   onCreateOffer(){
-    console.log(this.form);
+    this.LugaresService.addLugar(this.form.value.titulo, this.form.value.descripcion, 
+      +this.form.value.precio, new Date(this.form.value.desde), new Date(this.form.value.hasta));
+      this.form.reset();
+
+      this.router.navigate(['/lugares/tabs/ofertas']);
   }
   
 }
+

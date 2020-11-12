@@ -1,9 +1,11 @@
 import { LugaresService } from './../../lugares.service';
 import { Lugar } from './../../lugar.model';
-import { NuevaReservacionComponent } from 'src/app/lugares/ofertas/nueva-reservacion/nueva-reservacion.component';
-import { Component, OnInit } from '@angular/core';
+import { NuevaReservacionComponent } from './../../../reservaciones/nueva-reservacion/nueva-reservacion.component';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ActionSheetController, ModalController, NavController } from '@ionic/angular';
+import { ActionSheetController, ModalController, NavController, LoadingController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
+import { ReservacionService } from 'src/app/reservaciones/reservacion.service';
 
 @Component({
   selector: 'app-detalle-lugar',
@@ -11,9 +13,10 @@ import { ActionSheetController, ModalController, NavController } from '@ionic/an
   styleUrls: ['./detalle-lugar.page.scss'],
 })
 
-export class DetalleLugarPage implements OnInit {
+export class DetalleLugarPage implements OnInit, OnDestroy {
 
   lugarActual: Lugar;
+  lugarSub: Subscription;
 
   constructor(
     private router: Router,
@@ -21,7 +24,9 @@ export class DetalleLugarPage implements OnInit {
     private modalCtrl: ModalController,
     private route: ActivatedRoute,
     private lugarService: LugaresService,
-    private actionSheetCtrl: ActionSheetController) {}
+    private actionSheetCtrl: ActionSheetController,
+    private reservacionService: ReservacionService,
+    private loadingCtrl: LoadingController) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -29,12 +34,21 @@ export class DetalleLugarPage implements OnInit {
         this.navCtrl.navigateBack('/lugares/tabs/busqueda');
         return;
       }
-      this.lugarActual = this.lugarService.getLugar(+paramMap.get('lugarId'));
+      this.lugarSub = this.lugarService.getLugar(+paramMap.get('lugarId')).subscribe(lugar =>{
+        this.lugarActual = lugar;
+        });
     });
   }
   
+  ngOnDestroy(){
+    if(this.lugarSub){
+      this.lugarSub.unsubscribe();
+    }
+  }
 
-  onReservarLugar(){
+  openReservarModal(mode: 'select' | 'random'){
+    console.log(mode);
+  
     //this.router.navigateByUrl('/lugares/tabs/busqueda');
     //this.navCtrl.pop();
     //this.navCtrl.navigateBack('/lugares/tabs/busqueda');
@@ -63,10 +77,27 @@ export class DetalleLugarPage implements OnInit {
       })
       .then(resultData => {
         console.log(resultData);
+        if(resultData.role === 'confirm'){
+          this.loadingCtrl.create({message: 'haciendo reservacion...'}).then(loadingEl =>{
+            loadingEl.present();
+            const data = resultData.data.reservacion;
+            this.reservacionService.addReservacion( this.lugarActual.id,
+            this.lugarActual.titulo,
+            this.lugarActual.imageUrl,
+            data.nombre,
+            data.apellido,
+            data.numeroHuespedes,
+            data.desde,
+            data.hasta).subscribe(()=>{
+              loadingEl.dismiss();
+            });
+          }
+        );
+        
+        }
       });
   }    
 
-  openReservarModal(mode: 'select' | 'random'){
-    console.log(mode);
-  }
 }
+
+

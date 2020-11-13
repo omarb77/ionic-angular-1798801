@@ -14,6 +14,7 @@
     <ion-segment-button value="disponibles">Available</ion-segment-button>
   </ion-segment>
 
+<<<<<<< HEAD
   <ion-grid *ngIf="!lugaresRelevantes || lugaresRelevantes.length <=0">
     <ion-row>
       <ion-col size="12" size-sm="8" offset-sm="2">
@@ -23,29 +24,33 @@
   </ion-grid>
 
   <ion-grid *ngIf="lugaresRelevantes.length > 0">
-
+=======
   <ion-grid>
+>>>>>>> 410313d4de168cc3cc2f33538a16f0ea635f2051
     <ion-row>
       <ion-col size="12" size-sm="8" offset-sm="2" text-center>
-
         <ion-card>
           <ion-card-header>
+<<<<<<< HEAD
             <ion-card-title>{{lugaresRelevantes[0].titulo}}</ion-card-title>
             <ion-card-subtitle>{{lugaresRelevantes[0].precio |currency}} /por noche</ion-card-subtitle>
           </ion-card-header>
           <ion-img [src]="lugaresRelevantes[0].imageUrl"></ion-img>
-          <ion-card-header>
+=======
             <ion-card-title>{{lugaresCargados[0].titulo}}</ion-card-title>
             <ion-card-subtitle>{{lugaresCargados[0].precio |currency}} /por noche</ion-card-subtitle>
           </ion-card-header>
           <ion-img [src]="lugaresCargados[0].imageUrl"></ion-img>
-
+>>>>>>> 410313d4de168cc3cc2f33538a16f0ea635f2051
           <ion-card-content>
             <p>{{lugaresRelevantes[0].descripcion}}</p>
           </ion-card-content>
           <div class="ion-text-right">
+<<<<<<< HEAD
             <ion-button fill="clear" color="primary" [routerLink]="['/', 'lugares', 'tabs', 'busqueda', lugaresRelevantes[0].id]">Mas</ion-button>
+=======
             <ion-button fill="clear" color="primary" [routerLink]="['/', 'lugares', 'tabs', 'busqueda', lugaresCargados[0].id]">Mas</ion-button>
+>>>>>>> 410313d4de168cc3cc2f33538a16f0ea635f2051
           </div>
         </ion-card>
       </ion-col>
@@ -53,7 +58,11 @@
 
     <ion-row>
       <ion-col size="12" size-sm="8" offset-sm="2" text-center>
+<<<<<<< HEAD
+        <ion-virtual-scroll [items]="lugaresListados" apprxItemHeight="72px">
+=======
         <ion-virtual-scroll [items]="lugaresCargados" apprxItemHeight="72px">
+>>>>>>> 410313d4de168cc3cc2f33538a16f0ea635f2051
           <ion-item [routerLink]="['/', 'lugares', 'tabs', 'busqueda', lugar.id]" detail *virtualItem="let lugar">
           
             <ion-thumbnail slot="start">
@@ -66,10 +75,8 @@
         </ion-virtual-scroll>
         
       </ion-col>
-    </ion-row>
+   </ion-row>
 
-
-  </ion-grid>
 
   </ion-grid>
 

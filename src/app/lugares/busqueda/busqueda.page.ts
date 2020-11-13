@@ -4,8 +4,10 @@ import { Lugar } from './../lugar.model';
 import { Component, OnInit, OnDestroy} from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { SegmentChangeEventDetail} from '@ionic/core';
-
+<<<<<<< HEAD
 import { Subscription } from 'rxjs';
+=======
+>>>>>>> 410313d4de168cc3cc2f33538a16f0ea635f2051
 
 @Component({
   selector: 'app-busqueda',
@@ -32,7 +34,7 @@ export class BusquedaPage implements OnInit, OnDestroy {
     });
   }
   
-  ngOnDestroy(){
+  OnDestroy(){
     if(this.lugaresSub){
       this.lugaresSub.unsubscribe();
     }
@@ -43,6 +45,7 @@ export class BusquedaPage implements OnInit, OnDestroy {
 
   onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
     console.log(event.detail);
+<<<<<<< HEAD
 
     if(event.detail.value === 'todos'){
       this.lugaresRelevantes = this.lugaresCargados;
@@ -52,6 +55,8 @@ export class BusquedaPage implements OnInit, OnDestroy {
       lugar.usuarioId !== this.loginService.usuarioId);
       this.lugaresListados = this.lugaresRelevantes.slice(1);
     }
+=======
+>>>>>>> 410313d4de168cc3cc2f33538a16f0ea635f2051
   }
   
 }

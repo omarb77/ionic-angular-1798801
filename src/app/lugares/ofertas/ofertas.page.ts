@@ -13,7 +13,6 @@ export class OfertasPage implements OnInit, OnDestroy {
 
   ofertas: Lugar[];
   private lugaresSub: Subscription;
-  isLoading= false;
 
   constructor(private offersService: LugaresService, private router: Router) { }
 
@@ -23,18 +22,11 @@ export class OfertasPage implements OnInit, OnDestroy {
     });
   }
 
-  ionViewWillEnter(){
-    this.isLoading= true;
-    this.offersService.fetchLugares().subscribe( ()=>{
-      this.isLoading = false;
-    });
-  }
   ngOnDestroy(){
     if(this.lugaresSub){
       this.lugaresSub.unsubscribe();
     }
   }
-
   onEdit(id: number){
     this.router.navigate(['/', 'lugares', 'tabs', 'ofertas', 'edit', id]);
   }

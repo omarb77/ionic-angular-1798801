@@ -3,9 +3,8 @@ import { Lugar } from './../../lugar.model';
 import { NuevaReservacionComponent } from './../../../reservaciones/nueva-reservacion/nueva-reservacion.component';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ActionSheetController, ModalController, NavController, LoadingController } from '@ionic/angular';
+import { ActionSheetController, ModalController, NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { ReservacionService } from 'src/app/reservaciones/reservacion.service';
 
 @Component({
   selector: 'app-detalle-lugar',
@@ -24,9 +23,7 @@ export class DetalleLugarPage implements OnInit, OnDestroy {
     private modalCtrl: ModalController,
     private route: ActivatedRoute,
     private lugarService: LugaresService,
-    private actionSheetCtrl: ActionSheetController,
-    private reservacionService: ReservacionService,
-    private loadingCtrl: LoadingController) {}
+    private actionSheetCtrl: ActionSheetController) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -40,15 +37,13 @@ export class DetalleLugarPage implements OnInit, OnDestroy {
     });
   }
   
-  ngOnDestroy(){
+  OnDestroy(){
     if(this.lugarSub){
       this.lugarSub.unsubscribe();
     }
   }
 
-  openReservarModal(mode: 'select' | 'random'){
-    console.log(mode);
-  
+  onReservarLugar(){
     //this.router.navigateByUrl('/lugares/tabs/busqueda');
     //this.navCtrl.pop();
     //this.navCtrl.navigateBack('/lugares/tabs/busqueda');
@@ -77,27 +72,12 @@ export class DetalleLugarPage implements OnInit, OnDestroy {
       })
       .then(resultData => {
         console.log(resultData);
-        if(resultData.role === 'confirm'){
-          this.loadingCtrl.create({message: 'haciendo reservacion...'}).then(loadingEl =>{
-            loadingEl.present();
-            const data = resultData.data.reservacion;
-            this.reservacionService.addReservacion( this.lugarActual.id,
-            this.lugarActual.titulo,
-            this.lugarActual.imageUrl,
-            data.nombre,
-            data.apellido,
-            data.numeroHuespedes,
-            data.desde,
-            data.hasta).subscribe(()=>{
-              loadingEl.dismiss();
-            });
-          }
-        );
-        
-        }
       });
   }    
 
+  openReservarModal(mode: 'select' | 'random'){
+    console.log(mode);
+  }
 }
 
 

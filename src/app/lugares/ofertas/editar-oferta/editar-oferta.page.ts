@@ -45,7 +45,7 @@ export class EditarOfertaPage implements OnInit, OnDestroy {
       });
   }
 
-  OnDestroy(){
+  ngOnDestroy(){
     if(this.lugarSub){
       this.lugarSub.unsubscribe();
     }
@@ -59,7 +59,7 @@ export class EditarOfertaPage implements OnInit, OnDestroy {
       message: 'Actualizando lugar ...'
     }).then(loadEl =>{
       loadEl.present();
-      this.lugarService.updateLugar(this.lugar.id,
+      this.lugarService.updateLugar(this.lugar.firebaseId,
         this.form.value.titulo, this.form.value.descripcion).subscribe(()=>{
           loadEl.dismiss();
           this.form.reset();

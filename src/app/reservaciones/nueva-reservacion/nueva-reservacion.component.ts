@@ -34,9 +34,9 @@ export class NuevaReservacionComponent implements OnInit {
     this.modalCtrl.dismiss({reservacion: {
       nombre: this.myform.value['nombre'],
       apellido: this.myform.value['apellido'],
-      numeroHuespedes: this.myform.value['numero.huespedes'],
-      desde: this.myform.value['fec-desde'],
-      hasta: this.myform.value['fec-hasta']
+      numeroHuespedes: +this.myform.value['numero.huespedes'],
+      desde: new Date(this.myform.value['fec-desde']),
+      hasta: new Date(this.myform.value['fec-hasta'])
     }}, 'confirm');
   }
 

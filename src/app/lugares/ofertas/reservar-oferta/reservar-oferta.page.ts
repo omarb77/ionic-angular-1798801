@@ -29,7 +29,7 @@ export class ReservarOfertaPage implements OnInit, OnDestroy {
     });
   }
 
-  OnDestroy(){
+  ngOnDestroy(){
     if(this.lugarSub){
       this.lugarSub.unsubscribe();
     }

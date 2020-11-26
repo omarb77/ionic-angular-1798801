@@ -17,6 +17,8 @@ export class EditarOfertaPage implements OnInit, OnDestroy {
   lugar: Lugar;
   form: FormGroup;
   lugarSub:Subscription;
+  isLoading = false;
+  lugarFirebaseId: string;
 
   constructor(private route: ActivatedRoute,
               private lugarService: LugaresService,
@@ -31,7 +33,9 @@ export class EditarOfertaPage implements OnInit, OnDestroy {
         this.navCtrl.navigateBack('lugares/tabs/ofertas');
         return;
       }
-      this.lugarSub = this.lugarService.getLugar(+param.get('lugarId')).subscribe(lugar =>{
+      this.lugarFirebaseId= param.get('lugarId');
+      this.isLoading= true;
+      this.lugarSub = this.lugarService.getLugar(param.get('lugarId')).subscribe(lugar =>{
         this.lugar = lugar;
         this.form = new FormGroup({
           titulo: new FormControl(this.lugar.titulo, {
@@ -41,6 +45,7 @@ export class EditarOfertaPage implements OnInit, OnDestroy {
             updateOn: 'blur', validators: [Validators.required, Validators.maxLength(180)]
             })
           });
+          this.isLoading= false;
         });
       });
   }

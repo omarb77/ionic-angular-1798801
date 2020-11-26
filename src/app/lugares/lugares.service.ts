@@ -3,9 +3,10 @@ import { LoginService } from './../login/login.service';
 import { FnParam } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
 import { Lugar } from './lugar.model';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of} from 'rxjs';
 import { take, map, tap, delay, switchMap} from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { getLocaleDateTimeFormat } from '@angular/common';
 
 interface LugarData{
   descripcion: string;
@@ -42,7 +43,7 @@ export class LugaresService {
   constructor(private loginService: LoginService, private http: HttpClient) {}
   
   fetchLugares(){
-    return this.http.get<{[key: string]:LugarData}>('https://bdlab01.firebaseio.com/ofertas-lugares.json').pipe(map(dta =>{
+    return this.http.get<{[key: string]:LugarData}>(`https://bdlab01.firebaseio.com/ofertas-lugares.json`).pipe(map(dta =>{
       const lugares = [];
       for(const key in dta){
         if(dta.hasOwnProperty(key)){
@@ -59,10 +60,14 @@ export class LugaresService {
       this._lugares.next(lugares)
     }));
   }
-  getLugar(id: number){
-    return this.lugares.pipe(take(1), map(lugares => {
-      return {...lugares.find( lu => lu.id === id)};
-    }));
+
+  getLugar(firebaseId: string){
+    return this.http.get<LugarData>(`https://bdlab01.firebaseio.com/ofertas-lugares/${firebaseId}.json`).pipe(
+      map(dta =>{
+        return new Lugar(dta.id, dta.titulo, dta.descripcion, dta.imageUrl, dta.precio,
+          new Date(dta.disponibleDesde), new Date(dta.disponibleHasta), dta.usuarioId, firebaseId);
+      })
+    );
   }
 
   addLugar(titulo: string, descripcion: string, precio: number, disponibleDesde: Date, disponibleHasta: Date){
@@ -79,7 +84,7 @@ export class LugaresService {
       ''
     );
 
-    this.http.post<any>('https://bdlab01.firebaseio.com/ofertas-lugares.json', {...newLugar, firebaseId: null}).subscribe(data => {
+    this.http.post<any>(`https://bdlab01.firebaseio.com/ofertas-lugares.json`, {...newLugar, firebaseId: null}).subscribe(data => {
       console.log(data);
       return this._lugares.pipe(take(1)).subscribe(lugares =>{
         this._lugares.next(lugares.concat(newLugar));
@@ -89,14 +94,23 @@ export class LugaresService {
 
   updateLugar(lugarId: string, titulo: string, descripcion: string){
     let nuevosLugares: Lugar[];
-    return this.lugares.pipe(take(1), switchMap(lugares => {
+    return this.lugares.pipe(take(1), 
+    switchMap(lugares =>{
+      if(!lugares || lugares.length <=0){
+        return this.fetchLugares();
+      }
+      else{
+        return of(lugares);
+      }
+    }),
+    switchMap(lugares => {
       const index = lugares.findIndex(lu => lu.firebaseId === lugarId);
       const nuevosLugares = [...lugares];
       const old = nuevosLugares[index];
       nuevosLugares[index] = new Lugar(old.id, titulo, descripcion, old.imageUrl,
         old.precio, old.disponibleDesde, old.disponibleHasta, old.usuarioId, '');
 
-        return this.http.put('https://bdlab01.firebaseio.com/ofertas-lugares/${lugar.id}.json', {...nuevosLugares[index]});
+        return this.http.put(`https://bdlab01.firebaseio.com/ofertas-lugares/${lugarId}.json`, {...nuevosLugares[index]});
     }), tap(() => {
           this._lugares.next(nuevosLugares);
     })

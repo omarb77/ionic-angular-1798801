@@ -14,17 +14,15 @@
     <ion-segment-button value="disponibles">Available</ion-segment-button>
   </ion-segment>
 
-  <ion-grid *ngIf="!lugaresRelevantes || lugaresRelevantes.length <=0">
+  <ion-grid *ngIf="isLoading">
     <ion-row>
       <ion-col size="12" size-sm="8" offset-sm="2">
-        <p>No hay lugares disponibles en este momento, regresa luego</p>
+        <ion-spinner color="primary"></ion-spinner>
       </ion-col> 
     </ion-row>
   </ion-grid>
 
-  <ion-grid *ngIf="lugaresRelevantes.length > 0">
-
-  <ion-grid>
+  <ion-grid *ngIf="isLoading && lugaresRelevantes.length > 0">
     <ion-row>
       <ion-col size="12" size-sm="8" offset-sm="2" text-center>
 
@@ -44,8 +42,8 @@
             <p>{{lugaresRelevantes[0].descripcion}}</p>
           </ion-card-content>
           <div class="ion-text-right">
-            <ion-button fill="clear" color="primary" [routerLink]="['/', 'lugares', 'tabs', 'busqueda', lugaresRelevantes[0].id]">Mas</ion-button>
-            <ion-button fill="clear" color="primary" [routerLink]="['/', 'lugares', 'tabs', 'busqueda', lugaresCargados[0].id]">Mas</ion-button>
+            <ion-button fill="clear" color="primary" [routerLink]="['/', 'lugares', 'tabs', 'busqueda', lugaresRelevantes[0].firebaseId]">Mas</ion-button>
+            <ion-button fill="clear" color="primary" [routerLink]="['/', 'lugares', 'tabs', 'busqueda', lugaresCargados[0].firebaseId]">Mas</ion-button>
           </div>
         </ion-card>
       </ion-col>
@@ -54,8 +52,7 @@
     <ion-row>
       <ion-col size="12" size-sm="8" offset-sm="2" text-center>
         <ion-virtual-scroll [items]="lugaresCargados" apprxItemHeight="72px">
-          <ion-item [routerLink]="['/', 'lugares', 'tabs', 'busqueda', lugar.id]" detail *virtualItem="let lugar">
-          
+          <ion-item [routerLink]="['/', 'lugares', 'tabs', 'busqueda', lugar.firebaseId]" detail *virtualItem="let lugar">
             <ion-thumbnail slot="start">
               <ion-img [src]="lugar.imageUrl"></ion-img>
             </ion-thumbnail>
@@ -67,9 +64,6 @@
         
       </ion-col>
     </ion-row>
-
-
-  </ion-grid>
 
   </ion-grid>
 

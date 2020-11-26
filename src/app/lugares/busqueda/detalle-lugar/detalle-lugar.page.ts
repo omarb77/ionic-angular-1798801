@@ -3,9 +3,10 @@ import { Lugar } from './../../lugar.model';
 import { NuevaReservacionComponent } from './../../../reservaciones/nueva-reservacion/nueva-reservacion.component';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ActionSheetController, ModalController, NavController, LoadingController } from '@ionic/angular';
+import { ActionSheetController, ModalController, NavController, LoadingController, AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { ReservacionService } from 'src/app/reservaciones/reservacion.service';
+import { ok } from 'assert';
 
 @Component({
   selector: 'app-detalle-lugar',
@@ -17,6 +18,7 @@ export class DetalleLugarPage implements OnInit, OnDestroy {
 
   lugarActual: Lugar;
   lugarSub: Subscription;
+  isLoading = false;
 
   constructor(
     private router: Router,
@@ -26,7 +28,8 @@ export class DetalleLugarPage implements OnInit, OnDestroy {
     private lugarService: LugaresService,
     private actionSheetCtrl: ActionSheetController,
     private reservacionService: ReservacionService,
-    private loadingCtrl: LoadingController) {}
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -34,8 +37,20 @@ export class DetalleLugarPage implements OnInit, OnDestroy {
         this.navCtrl.navigateBack('/lugares/tabs/busqueda');
         return;
       }
-      this.lugarSub = this.lugarService.getLugar(+paramMap.get('lugarId')).subscribe(lugar =>{
+      this.isLoading= true;
+      this.lugarSub = this.lugarService.getLugar(paramMap.get('lugarId')).subscribe(lugar =>{
         this.lugarActual = lugar;
+        this.isLoading= false;
+        }, error =>{
+          this.alertCtrl.create({
+            header: 'Error',
+            message: 'Error al obtener el lugar',
+            buttons: [ {text: 'ok', handler: () =>{
+              this.router.navigate(['lugares/tabs/busqueda']);
+            }}
+          ]}).then(alertEl => {
+            alertEl.present();
+          });
         });
     });
   }
@@ -46,6 +61,23 @@ export class DetalleLugarPage implements OnInit, OnDestroy {
     }
   }
 
+  onReservarLugar(){
+    this.actionSheetCtrl.create({
+      header: 'selecciona accion',
+      buttons: [{
+        text: 'seleccionar fecha', handler: ()=>{
+          this.openReservarModal('select');
+        }},
+      {text: 'fecha al azar', handler: ()=>{
+        this.openReservarModal('random');
+      }},
+    {text: 'cancelar', role:'cancel'}
+  ]
+  }).then(actionSheetEl =>{
+    actionSheetEl.present();
+  });
+  
+  }
   openReservarModal(mode: 'select' | 'random'){
     console.log(mode);
   

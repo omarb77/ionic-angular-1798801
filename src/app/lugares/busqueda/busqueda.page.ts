@@ -19,6 +19,7 @@ export class BusquedaPage implements OnInit, OnDestroy {
   lugaresListados: Lugar[];
   lugaresRelevantes: Lugar[];
   private lugaresSub: Subscription;
+  isLoading= false;
 
   constructor(private LugaresService: LugaresService, 
               private menuCtrl: MenuController,
@@ -37,6 +38,14 @@ export class BusquedaPage implements OnInit, OnDestroy {
       this.lugaresSub.unsubscribe();
     }
   }
+
+  ionViewWillEnter(){
+    this.isLoading = true;
+    this.LugaresService.fetchLugares().subscribe(()=>{
+      this.isLoading = false;
+    });
+  }
+
   openSideMenu(){
     this.menuCtrl.open();
   }

@@ -14,6 +14,7 @@ export class ReservarOfertaPage implements OnInit, OnDestroy {
 
   lugar: Lugar;
   lugarSub: Subscription;
+  isLoading= false;
 
   constructor(private route: ActivatedRoute, private NavCtrl: NavController, private LugaresService: LugaresService) { }
 
@@ -23,8 +24,10 @@ export class ReservarOfertaPage implements OnInit, OnDestroy {
         this.NavCtrl.navigateBack('/lugares/tabs/ofertas');
         return;
       }
-      this.lugarSub = this.LugaresService.getLugar(+paramMap.get('lugarId')).subscribe(lugar =>{
+      this.isLoading= true;
+      this.lugarSub = this.LugaresService.getLugar(paramMap.get('lugarId')).subscribe(lugar =>{
         this.lugar = lugar;
+        this.isLoading= false; 
       });
     });
   }

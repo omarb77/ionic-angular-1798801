@@ -35,8 +35,8 @@ export class OfertasPage implements OnInit, OnDestroy {
     }
   }
 
-  onEdit(id: number){
-    this.router.navigate(['/', 'lugares', 'tabs', 'ofertas', 'edit', id]);
+  onEdit(firebaseId: string){
+    this.router.navigate(['/', 'lugares', 'tabs', 'ofertas', 'edit', firebaseId]);
   }
 
 }

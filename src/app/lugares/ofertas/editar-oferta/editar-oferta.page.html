@@ -1,11 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button [defaultHref]=" 'lugares/tabs/ofertas' + lugar.id"></ion-back-button>
+      <ion-back-button [defaultHref]=" 'lugares/tabs/ofertas' + lugarFirebaseId"></ion-back-button>
     </ion-buttons>
     <ion-title>editar-oferta</ion-title>
     <ion-buttons slot="primary">
-      <ion-button (click)="onUpdateOffer()" [disabled]="!form.valid">
+      <ion-button (click)="onUpdateOffer()" [disabled]="!form?.valid">
         <ion-icon name="checkmark" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -14,7 +14,8 @@
 
 <ion-content>
 
-  <form [formGroup]="form">
+  <div *ngIf="isLoading" class="ion-padding ion-text-center"></div>
+  <form [formGroup]="form" *ngIf="!isLoading"> 
     <ion-grid>
 
       <ion-row>

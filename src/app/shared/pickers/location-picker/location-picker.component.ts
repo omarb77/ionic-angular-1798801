@@ -1,10 +1,11 @@
-import { LugarUbicacion } from './../../../lugares/location.model';
+import { Capacitor, Plugins } from '@capacitor/core';
+import { LugarUbicacion, Coordenadas } from './../../../lugares/location.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from './../../../../environments/environment';
 import { map, switchMap } from 'rxjs/operators';
 import { MapModalComponent } from './../../map-modal/map-modal.component';
-import { ModalController } from '@ionic/angular';
-import { Component, OnInit } from '@angular/core';
+import { ModalController, ActionSheetController, AlertController } from '@ionic/angular';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import {of} from 'rxjs';
 
 @Component({
@@ -15,13 +16,49 @@ import {of} from 'rxjs';
 
 export class LocationPickerComponent implements OnInit {
 
+  @Output() ubicacionSelected = new EventEmitter<LugarUbicacion>()
   selectedLocationImage: string;
 
-  constructor(private modalCtrl: ModalController, private http: HttpClient) { }
+  constructor(private modalCtrl: ModalController, private http: HttpClient, private actionSheet: ActionSheetController,
+              private alertCtrl: AlertController) { }
 
   ngOnInit() {}
 
   onPickLocation(){
+    this.actionSheet.create({header: 'Selecciona', buttons: [
+      {text: 'Ubicacion Actual', handler: ()=>{
+        this.ubicacionUsuario();
+      }},
+      {text: 'Ubicacion en el Mapa', handler: ()=>{
+        this.openMap();
+      }},
+      {text: 'cancelar', role: 'Cancel'}
+    ]}).then(actionEl => {
+      actionEl.present();
+    });
+  }
+
+  showAlertLocationError(){
+    this.alertCtrl.create({header: 'No se pudo acceder a la ubicación', 
+    message:'Intentelo de nuevo', buttons: ['OK']});
+  }
+
+  ubicacionUsuario(){
+    if(!Capacitor.isPluginAvailable('Geolocation')){
+      this.showAlertLocationError();
+      return;
+    }
+
+    Plugins.Geolocation.getCurrentPosition().then(geolocation =>{
+      const coords: Coordenadas = {
+        lat: geolocation.coords.latitude, lng: geolocation.coords.longitude};
+        this.crearPunto(coords.lat, coords.lng);
+    }).catch(err =>{
+      this.showAlertLocationError();
+    });
+  }
+
+  openMap(){
     this.modalCtrl.create({component: MapModalComponent}).then(modalEl =>{
       modalEl.onDidDismiss().then(modalData =>{
         console.log(modalData);
@@ -29,30 +66,34 @@ export class LocationPickerComponent implements OnInit {
           return;
         }
         else{
-          const pickedLocation: LugarUbicacion ={
-            lat: modalData.data.lat,
-            lng: modalData.data.lng,
-            address: null,
-            staticMapImageUrl: null
-          }
-          this.getAddress(modalData.data.lat, modalData.data.lng).pipe(switchMap(address =>{
-            pickedLocation.address = address;
-            return of(this.getMapImage(pickedLocation.lat, pickedLocation.lng, 16));
-          })
-          ).subscribe(staticMap =>{
-            pickedLocation.staticMapImageUrl =staticMap;
-            this.selectedLocationImage=staticMap;
-          })
+          this.crearPunto(modalData.data.lat, modalData.data.lng);
         }
       });
       modalEl.present();
     });
   }
 
+  private crearPunto(lat: number, lng: number){
+    const pickedLocation: LugarUbicacion ={
+      lat: lat,
+      lng: lng,
+      address: null,
+      staticMapImageUrl: null
+    }
+
+    this.getAddress(lat, lng).pipe(switchMap(address =>{
+      pickedLocation.address = address;
+      return of(this.getMapImage(pickedLocation.lat, pickedLocation.lng, 16));
+    })
+    ).subscribe(staticMap =>{
+      pickedLocation.staticMapImageUrl = staticMap;
+      this.selectedLocationImage = staticMap;
+      this.ubicacionSelected.emit(pickedLocation);
+    })
+  }
   private getAddress(lat: number, lng: number){
     return this.http.get<any>(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${environment.googleMapsAPIKey}`).
     pipe(map(geoData =>{
-      console.log(geoData =>{
         console.log(geoData);
         if(!geoData || !geoData.results || geoData.results.length === 0){
           return null;
@@ -60,7 +101,6 @@ export class LocationPickerComponent implements OnInit {
         else{
           return geoData.results[0].formatted_address;
         }
-      })
     }));
   }
 

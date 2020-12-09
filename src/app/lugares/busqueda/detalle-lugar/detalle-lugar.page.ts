@@ -1,3 +1,4 @@
+import { MapModalComponent } from './../../../shared/map-modal/map-modal.component';
 import { LugaresService } from './../../lugares.service';
 import { Lugar } from './../../lugar.model';
 import { NuevaReservacionComponent } from './../../../reservaciones/nueva-reservacion/nueva-reservacion.component';
@@ -78,6 +79,7 @@ export class DetalleLugarPage implements OnInit, OnDestroy {
   });
   
   }
+
   openReservarModal(mode: 'select' | 'random'){
     console.log(mode);
   
@@ -130,6 +132,17 @@ export class DetalleLugarPage implements OnInit, OnDestroy {
       });
   }    
 
+  onMostrarMapa(){
+    this.modalCtrl.create({component: MapModalComponent, componentProps: {
+      center: {lat: this.lugarActual.ubicacion.lat, 
+        lng: this.lugarActual.ubicacion.lng},
+        selectable: false,
+        closeButtonText: 'close',
+        title: '',
+    }}).then(modalEl=>{
+      modalEl.present();
+    })
+  }
 }
 
 

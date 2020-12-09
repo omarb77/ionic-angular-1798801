@@ -1,3 +1,4 @@
+import { SharedModule } from './../../../shared/shared.module';
 import { NuevaReservacionComponent } from './../../../reservaciones/nueva-reservacion/nueva-reservacion.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -14,7 +15,8 @@ import { DetalleLugarPage } from './detalle-lugar.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    DetalleLugarPageRoutingModule
+    DetalleLugarPageRoutingModule,
+    SharedModule
   ],
   declarations: [DetalleLugarPage, NuevaReservacionComponent],
   entryComponents: [NuevaReservacionComponent]

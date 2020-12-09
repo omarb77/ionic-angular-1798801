@@ -1,3 +1,4 @@
+import { LugarUbicacion } from './location.model';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginService } from './../login/login.service';
 import { FnParam } from '@angular/compiler/src/output/output_ast';
@@ -17,6 +18,7 @@ interface LugarData{
   precio: number;
   titulo: string;
   usuarioId: number;
+  ubicacion: LugarUbicacion;
 }
 
 @Injectable({
@@ -50,7 +52,7 @@ export class LugaresService {
           lugares.push(
             //dta
             new Lugar(dta[key].id, dta[key].titulo, dta[key].descripcion, dta[key].imageUrl, dta[key].precio, new Date(dta[key].disponibleDesde),
-            new Date(dta[key].disponibleHasta), dta[key].usuarioId, key)
+            new Date(dta[key].disponibleHasta), dta[key].usuarioId, key, dta[key].ubicacion)
           )
         }
       }
@@ -65,12 +67,12 @@ export class LugaresService {
     return this.http.get<LugarData>(`https://bdlab01.firebaseio.com/ofertas-lugares/${firebaseId}.json`).pipe(
       map(dta =>{
         return new Lugar(dta.id, dta.titulo, dta.descripcion, dta.imageUrl, dta.precio,
-          new Date(dta.disponibleDesde), new Date(dta.disponibleHasta), dta.usuarioId, firebaseId);
+          new Date(dta.disponibleDesde), new Date(dta.disponibleHasta), dta.usuarioId, firebaseId, dta.ubicacion);
       })
     );
   }
 
-  addLugar(titulo: string, descripcion: string, precio: number, disponibleDesde: Date, disponibleHasta: Date){
+  addLugar(titulo: string, descripcion: string, precio: number, disponibleDesde: Date, disponibleHasta: Date, ubicacion: LugarUbicacion){
 
     const newLugar = new Lugar(
       Math.random(),
@@ -81,7 +83,8 @@ export class LugaresService {
       disponibleDesde,
       disponibleHasta,
       this.loginService.usuarioId,
-      ''
+      '',
+      ubicacion
     );
 
     this.http.post<any>(`https://bdlab01.firebaseio.com/ofertas-lugares.json`, {...newLugar, firebaseId: null}).subscribe(data => {
@@ -108,7 +111,7 @@ export class LugaresService {
       const nuevosLugares = [...lugares];
       const old = nuevosLugares[index];
       nuevosLugares[index] = new Lugar(old.id, titulo, descripcion, old.imageUrl,
-        old.precio, old.disponibleDesde, old.disponibleHasta, old.usuarioId, '');
+        old.precio, old.disponibleDesde, old.disponibleHasta, old.usuarioId, '', old.ubicacion);
 
         return this.http.put(`https://bdlab01.firebaseio.com/ofertas-lugares/${lugarId}.json`, {...nuevosLugares[index]});
     }), tap(() => {

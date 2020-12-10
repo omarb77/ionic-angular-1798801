@@ -27,6 +27,7 @@ export class BusquedaPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.lugaresSub = this.LugaresService.lugares.subscribe(lugares => {
+      console.log(lugares);
       this.lugaresCargados = lugares;
       this.lugaresRelevantes = this.lugaresCargados;
       this.lugaresListados = this.lugaresRelevantes.slice();

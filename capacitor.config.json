@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "ionic-angular",
+  "appId": "mx.edu.uanl.fcfm.lcc.moviles.fakebnb",
+  "appName": "fakebnb",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
